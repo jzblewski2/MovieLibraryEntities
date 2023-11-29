@@ -15,11 +15,6 @@ namespace MovieLibraryEntities.Dao
             _context = _contextFactory.CreateDbContext();
         }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
-
         public IEnumerable<Movie> GetAll()
         {
             return _context.Movies.ToList();
@@ -32,6 +27,29 @@ namespace MovieLibraryEntities.Dao
             var temp = listOfMovies.Where(x => x.Title.Contains(searchString, StringComparison.CurrentCultureIgnoreCase));
 
             return temp;
+        }
+
+        public Movie GetById(int id)
+        {
+            return _context.Movies.FirstOrDefault(x => x.Id == id);
+        }
+
+        public Movie GetByTitle(string title)
+        {
+            return _context.Movies.FirstOrDefault(x => x.Title == title);
+        }
+
+        public List<Movie> FindMovie(string title)
+        {
+            // find by title - could return more than one item
+            return _context.Movies
+                .Where(x => x.Title.Contains(title, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }
